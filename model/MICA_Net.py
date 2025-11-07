@@ -36,29 +36,29 @@ class MICA_Net(nn.Module):
         sequence_outs = []
 
         for i in range(f1_norm.shape[0]):
-            audfts = f1_norm[i]
+            imufts = f1_norm[i]
             visfts = f2_norm[i]
-            aud_fts = self.encoder1(audfts)
+            imu_fts = self.encoder1(imufts)
 
             vis_fts = self.encoder2(visfts)
-            aud_vis_fts = torch.cat((aud_fts, vis_fts))
-            a_t = self.affine_a(aud_vis_fts.transpose(0, 1))
-            att_aud = torch.mm(aud_fts, a_t)
-            audio_att = self.tanh(torch.div(att_aud, math.sqrt(aud_vis_fts.shape[1])))
+            imu_vis_fts = torch.cat((imu_fts, vis_fts))
+            a_t = self.affine_a(imu_vis_fts.transpose(0, 1))
+            att_imu = torch.mm(imu_fts, a_t)
+            imu_att = self.tanh(torch.div(att_imu, math.sqrt(imu_vis_fts.shape[1])))
 
-            aud_vis_fts = torch.cat((aud_fts, vis_fts))
-            v_t = self.affine_v(aud_vis_fts.transpose(0, 1))
+            imu_vis_fts = torch.cat((imu_fts, vis_fts))
+            v_t = self.affine_v(imu_vis_fts.transpose(0, 1))
             att_vis = torch.mm(vis_fts, v_t)
-            vis_att = self.tanh(torch.div(att_vis, math.sqrt(aud_vis_fts.shape[1])))
-            H_a = self.relu(alpha *(self.W_ca(audio_att) +self.W_a(aud_fts)))
+            vis_att = self.tanh(torch.div(att_vis, math.sqrt(imu_vis_fts.shape[1])))
+            H_a = self.relu(alpha *(self.W_ca(imu_att) +self.W_a(imu_fts)))
             H_v = self.relu((1-alpha) *(self.W_cv(vis_att) + self.W_v(vis_fts)))
 
-            att_audio_features = alpha * self.W_ha(H_a).transpose(0, 1) + aud_fts
+            att_imu_features = alpha * self.W_ha(H_a).transpose(0, 1) + imu_fts
             att_visual_features = (1-alpha) * self.W_hv(H_v).transpose(0, 1) + vis_fts
 
-            audiovisualfeatures = torch.cat((att_audio_features, att_visual_features), 1)
-            audiovisualfeatures = torch.flatten(audiovisualfeatures)
-            outs = self.regressor(audiovisualfeatures)
+            imu_visualfeatures = torch.cat((att_imu_features, att_visual_features), 1)
+            imu_visualfeatures = torch.flatten(imu_visualfeatures)
+            outs = self.regressor(imu_visualfeatures)
             sequence_outs.append(outs)
 
         final_outs = torch.stack(sequence_outs)

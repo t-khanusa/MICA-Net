@@ -179,7 +179,7 @@ class GatedInteractiveAttention(nn.Module):
         d_m: internal attention dimension (d in paper)
         num_heads: number of independent heads
     """
-    def __init__(self, d_v: int, d_q: int, d_m: int, num_heads: int):
+    def __init__(self, d_v: int, d_q: int, d_m: int, num_heads: int, num_classes: int):
         super().__init__()
         self.num_heads = num_heads
         self.d_m = d_m
@@ -203,7 +203,12 @@ class GatedInteractiveAttention(nn.Module):
         # Self projection (skip) to d_m space for gating residual
         self.W_self_v = nn.ModuleList([nn.Linear(d_v, d_m, bias=False) for _ in range(num_heads)])
         self.W_self_q = nn.ModuleList([nn.Linear(d_q, d_m, bias=False) for _ in range(num_heads)])
-
+        
+        self.classifier = nn.Sequential(
+            nn.Linear(num_heads * d_m * 2, 128),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(128, num_classes)
         # small epsilon for numerical stability if needed
         self.eps = 1e-8
 
@@ -276,5 +281,10 @@ class GatedInteractiveAttention(nn.Module):
         # Concatenate heads on feature dim
         H_v_gia = torch.cat(heads_v, dim=-1)  # (B, N_v, num_heads * d_m)
         H_q_gia = torch.cat(heads_q, dim=-1)  # (B, N_q, num_heads * d_m)
-
-        return H_v_gia, H_q_gia, attention_maps
+        
+        H_v_pooled = H_v_gia.squeeze(1)  # (B, num_heads * d_m)
+        H_q_pooled = H_q_gia.squeeze(1)  # (B, num_heads * d_m)
+        # Concatenate
+        fused = torch.cat([H_v_pooled, H_q_pooled], dim=-1)
+        logits = self.classifier(fused)
+        return logits, attention_maps

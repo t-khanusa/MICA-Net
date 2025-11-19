@@ -66,9 +66,11 @@ We evaluate the results of the models by parameters: Accuracy, Precision, Recall
 
 | 📚 Datasets   | 🎯 Accuracy(%) | 🎯 Precision(%) | 🎯 Recall(%) | 🎯 F1-Score(%) |
 | ------------- | -------------- | --------------- | ------------ | -------------- |
-| UTD-MHAD      | 92.10          | 93.33           | 92.18        | 92.22          |
+| UTD-MHAD      | 94.72          | 94.33           | 94.18        | 94.22          |
 | UESTC-MMEA-CL | 99.22          | 99.28           | 99.28        | 99.37          |
 | MuWiGes       | 98.98          | 99.00           | 98.92        | 99.16          |
+| MMAct(Cross-Subject)       | 89.74          | 90.03           | 88.17        | 89.24    |
+| MMAct(Cross-Session)       | 96.67          | 97.12           | 95.95        | 96.57    |
 
 ## ⚡ 5. Running on NVIDIA Jetson AGX Xavier
 
@@ -99,4 +101,5 @@ We evaluate the results of the models by parameters: Accuracy, Precision, Recall
 ## 🎓 6. Acknowledgments
 
 This research is funded by Hanoi University of Science and Technology (HUST) under project number T2021-SAHEP-003.
+
 

@@ -7,12 +7,12 @@ import copy
 from model.MICA_Net import MICA_Net
 
 
-def normalize(audio):
-    x = np.zeros((1, len(audio[0])))
-    max = float(np.max(audio[0]))
-    min = float(np.min(audio[0]))
-    for i in range(len(audio[0])):
-        x[0][i] = float((float(audio[0][i]) - min) / (max - min))
+def normalize(modality):
+    x = np.zeros((1, len(modality[0])))
+    max = float(np.max(modality[0]))
+    min = float(np.min(modality[0]))
+    for i in range(len(modality[0])):
+        x[0][i] = float((float(modality[0][i]) - min) / (max - min))
 
     return x
 

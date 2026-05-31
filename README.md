@@ -98,8 +98,4 @@ We evaluate the results of the models by parameters: Accuracy, Precision, Recall
    python TensorRT_validation.py
    ```
 
-## 🎓 6. Acknowledgments
-
-This research is funded by Hanoi University of Science and Technology (HUST) under project number T2021-SAHEP-003.
-
 

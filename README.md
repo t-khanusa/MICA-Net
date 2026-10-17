@@ -1,4 +1,4 @@
-# 🚀 MICA-Net: A Multimodal Cross-Attention Network for Human Action Recognition
+# 🚀 MICA-Net: A Multimodal Cross-Attention Network for Human Action Recognition - accepted at ACM Transactions on Multimedia Computing, Communications, and Applications
 
 This repository contains code and instructions for using MICA-Net, a new multimodal action recognition framework that combines data from multiple sensors to enhance human action recognition. Deploy MICA-Net model on NVIDIA Jetson AGX Xavier edge device, and test on a human-machine interactive system with home device control application.
 
